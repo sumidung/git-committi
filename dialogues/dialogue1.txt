@@ -13,7 +13,7 @@ All right, you listen and listen good, 'cause I get real angry when I gotta repe
 Not committing... It's like...pressing an emergency call button. You do it and I gotta come read you the riot act. See?
 Also, you gotta COMMIT REGULARLY before creating many uncorrelating changes. If you commit everything at once, it's the same as not committing at all.
 Well, OK... That last part? I just added that. Why? Because I wanted to.
-Forget about other your other side projects for a minute, will ya?
+Forget about your other side projects for a minute, will ya?
 I'm here to suggest that you try and develop this project, without forgetting to COMMIT. Got it?
 I know what you're thinking: "Whether I COMMIT or not should be up to me. After all, it's my code!"
 Well, sorry. Rules are rules, OK? Know what I'm sayin'? Let's not make a big deal out of this. End of discussion.

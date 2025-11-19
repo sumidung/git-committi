@@ -2,6 +2,12 @@ Resetti from Animal Crossing, but he blames you for committing too many files, i
 
 ![screenshot](images/committi.png)
 
+##### Single Line Install
+```bash
+curl -fsSL https://raw.githubusercontent.com/brtmax/git-committi/refs/heads/master/install.sh | bash
+```
+
+
 ##### To Dos
 - [ ] Markov style insult engine
 - [ ] Animated typing

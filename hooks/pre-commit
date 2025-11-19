@@ -1,0 +1,145 @@
+#!/bin/bash
+
+sentences=(
+    "Yes, boss!"
+    "I stink"
+    "You are my sunshine!"
+    "I love git."
+    "Forgetting to Commit = Death"
+)
+
+changed=$(git diff --cached --name-only | wc -l)
+
+# Offense threashold, if last commmit contains more than that amount of changed files
+# the offender should have committed inbetween -> forgot to commit!
+offense_threshold=3
+total_dialogues=8
+
+SHAME_FILE = ".git/commit_shame_file"
+DIALOGUE_DIR= ".git/dialogues"
+
+# Create the shame file if its missing
+if [ ! -f "$SHAME_FILE" ]; then
+    echo "offenses=0" > "$SHAME_FILE"
+fi
+
+source "$SHAME_FILE"
+offenses = $((offenses + 1))
+echo "offenses=$offenses" > "$SHAME_FILE"
+
+# Determine which dialogue to display:
+# Originally on Gamecube version, first 8 dialogues are displayed in order for successive offenses
+# after that, 6, 7 and 8 are repeated in order.
+if [ "$offenses" -le $total_dialogues ]; then
+    dialogue_index=$offenses
+else
+    # Cycle last three dialogues in order
+    cycle_index=$(((offenses - 6) % 3))
+    dialogue_index=$((6 + cycle_index))
+fi
+
+# Handle special case for dialogue5
+if [ "$dialogue_index" -eq 6 ]; then
+    # Display 5a
+    dialogue_file="$DIALOGUE_DIR/dialogue5a.txt"
+    while IFS= read -r line || [ -n "$line" ]; do
+        echo "$line"
+        echo "(Press ENTER to continue...)"
+        wait_for_single_enter
+    done < "$dialogue_file"
+
+    # Pick a random sentence
+    target_sentence="${sentences[$RANDOM % ${#sentences[@]}]}"
+
+    # run sequence with random sentence
+    run_committi_sequence "$target_sentence"
+
+    # Display 5b
+    dialogue_file="$DIALOGUE_DIR/dialogue5b.txt"
+    while IFS= read -r line || [ -n "$line" ]; do
+        echo "$line"
+        echo "(Press ENTER to continue...)"
+        wait_for_single_enter
+    done < "$dialogue_file"
+
+else
+    # Regular dialogues
+    dialogue_file="$DIALOGUE_DIR/dialogue${dialogue_index}.txt"
+    while IFS= read -r line || [ -n "$line" ]; do
+        echo "$line"
+        echo "(Press ENTER to continue...)"
+        wait_for_single_enter
+    done < "$dialogue_file"
+fi
+
+expected="I AM VERY SORRY"
+user_input=""
+
+# Optionally, make this trigger once every time, regardless of whether the user typed it correctly
+# the first
+while [ "$user_input" != "$expected" ]; do
+    read -p "What are you... ? " user_input < /dev/tty
+    if [ "$user_input" != "$expected" ]; then
+        echo "WRONG! YOU ARE VERY SORRY."
+    fi
+done
+
+# Of course, lore-accurate https://animalcrossing.fandom.com/wiki/Guide:Resetti_dialogues_(Animal_Crossing)
+run_committi_sequence() {
+    local target_sentence="$1"
+
+    echo "Say \"$target_sentence\"!"
+
+    while true; do
+        read -p "> " user_input < /dev/tty
+
+        if [[ "$user_input" == "$target_sentence" ]]; then
+            echo ""
+            echo "You're bein' sincere, right?"
+            echo "You really, truly, no-joke, cross-your-heart-and-hope-to-commit-regularly mean it?"
+            echo "Well? Do ya? Punk?"
+            echo ""
+            break
+        else
+            echo ""
+            echo "Wh-what?!?! Gwaah!!!"
+            echo ""
+            echo "You little hairball!!!"
+            echo ""
+            echo "You think I wasn't gonna read what you wrote there?"
+            echo "You oughta be ashamed of yourself! You worm!"
+            echo ""
+            echo "You keep on like this, we're gonna be here for a long, LONG time. You readin' me?"
+            echo ""
+            echo "Now stop monkeyin' around and do as you're told!"
+            echo ""
+            echo "You ready? Here goes..."
+            echo "Say \"$target_sentence\"!"
+        fi
+    done
+}
+
+wait_for_single_enter() {
+    # Put terminal in raw mode (disables input buffering)
+    stty -echo -icanon time 0 min 0
+
+    # Wait for key PRESS
+    while true; do
+        key=$(dd bs=1 count=1 2>/dev/null)
+        if [[ "$key" == $'\n' ]]; then
+            break
+        fi
+    done
+
+    # Now wait for key RELEASE (ignore held ENTER)
+    while true; do
+        key=$(dd bs=1 count=1 2>/dev/null)
+        if [[ -z "$key" ]]; then
+            # No key pressed -> user released ENTER
+            break
+        fi
+    done
+
+    # restore terminal
+    stty sane
+}

@@ -108,7 +108,7 @@ if [ "$dialogue_index" -eq 6 ]; then
     dialogue_file="$DIALOGUE_DIR/dialogue6a.txt"
     while IFS= read -r line || [ -n "$line" ]; do
         echo "$line"
-        read -p "(Press ENTER to continue...)" < /dev/tty || true
+        read < /dev/tty || true
     done < "$dialogue_file"
 
     # Pick a random sentence
@@ -121,7 +121,7 @@ if [ "$dialogue_index" -eq 6 ]; then
     dialogue_file="$DIALOGUE_DIR/dialogue6b.txt"
     while IFS= read -r line || [ -n "$line" ]; do
         echo "$line"
-        read -p "(Press ENTER to continue...)" < /dev/tty || true
+        read < /dev/tty || true
     done < "$dialogue_file"
 
 else
@@ -129,11 +129,11 @@ else
     dialogue_file="$DIALOGUE_DIR/dialogue${dialogue_index}.txt"
     while IFS= read -r line || [ -n "$line" ]; do
         echo "$line"
-        read -p "(Press ENTER to continue...)" < /dev/tty || true
+        read < /dev/tty || true
     done < "$dialogue_file"
 fi
 
-expected="I AM VERY SORRY"
+expected="VERY SORRY"
 user_input=""
 
 # Optionally, make this trigger once every time, regardless of whether the user typed it correctly

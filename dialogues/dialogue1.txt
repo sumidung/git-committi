@@ -1,61 +1,31 @@
 Hello. Um...allow me to introduce myself. The name's Committi. Mr. Committi.
-
 Have we...met before? At the...office, perhaps? Yeah, whatever.
-
 Anyway, let me just say thanks for using git.
-
 Um...on behalf of everyone at ...I...um...I...
-
 What was the next part? Huh? Aw, forget it! That's enough!
-
 Let's get down to business, whaddaya say? Because you may not know it, but you and I got issues to discuss.
-
 First, let me just tell you what it is I'm doin' here. Just so there are no misunderstandings later on.
-
 You, my friend, didn't regularly commit your changes, didn't you? Huh? Maybe on accident, maybe on purpose, but you didn't commit it.
-
 Or maybe you did, huh? Maybe you just went and turned the power off without committing. Sound familiar?
-
 What? Sorry, what was that? I didn't catch that last bit. Did you just say I'm right? You did what I said you did?
-
 Ah-HAH!!!
-
 All right, you listen and listen good, 'cause I get real angry when I gotta repeat stuff I gotta say.
-
 Not committing... It's like...pressing an emergency call button. You do it and I gotta come read you the riot act. See?
-
 Also, you gotta COMMIT REGULARLY before creating many uncorrelating changes. If you commit everything at once, it's the same as not committing at all.
-
 Well, OK... That last part? I just added that. Why? Because I wanted to.
-
 Forget about other your other side projects for a minute, will ya?
-
 I'm here to suggest that you try and develop this project, without forgetting to COMMIT. Got it?
-
 I know what you're thinking: "Whether I COMMIT or not should be up to me. After all, it's my code!"
-
 Well, sorry. Rules are rules, OK? Know what I'm sayin'? Let's not make a big deal out of this. End of discussion.
-
 This bein' our first meeting, I'm gonna let you off easy. Think of this as a friendly warning from me to you.
-
 Oh, one more thing. This is my job. I take it seriously. So next time you see me, it's no more Mr. Nice Mole.
-
 Oh, yeah, and another thing I guess I gotta say here...
-
 I really watched my... language...here today. I'm not usually quite so... you know, so polite.
-
 If I'm bein' truthful here, I gotta tell you... I been told I got what you call an acid tongue. I sorta...scare people.
-
 Hey, that's...who I am. Nothin' I can do about it. What, I'm supposed to say sorry for bein' me?
-
 Look, it's nothin' personal. I ain't tryin' to be mean or cruel or nothin'. I ain't a monster.
-
 For those people who get their feelin's bruised easily, I gotta apologize in advance. Just deal with it, OK?
-
 The deal is, I get paid to be nasty. Crazy world, huh? Ha ha ha ha ha!!!
-
 Well, I figure it's about time for me to get outta here.
-
 So, uh... Yeah. Here's hoping I don't have to come see you no more. Now...
-
 SCRAM!

@@ -4,6 +4,9 @@ set -e
 BASE_URL="https://raw.githubusercontent.com/brtmax/git-committi/master"
 
 PROJECT_ROOT="$(pwd)"
+HOOK_URL="https://raw.githubusercontent.com/brtmax/git-committi/master/hooks/pre-commit"
+ZIP_URL="https://github.com/brtmax/git-committi/archive/refs/heads/master.zip"
+TEMP_ZIP="/tmp/git-committi.zip"
 
 # Validate git repo
 if [ ! -d "$PROJECT_ROOT/.git" ]; then
@@ -15,6 +18,7 @@ fi
 HOOK_DEST="$PROJECT_ROOT/.git/hooks/pre-commit"
 DIALOGUE_DIR="$PROJECT_ROOT/.git/dialogues"
 ASCII_DIR="$PROJECT_ROOT/.git/ascii"
+SHAME_FILE="$PROJECT_ROOT/.git/commit_shame_file"
 
 echo "Installing pre-commit hook..."
 
@@ -24,25 +28,29 @@ if [ -f "$HOOK_DEST" ]; then
     echo "Backed up existing hook → pre-commit.backup"
 fi
 
-# Download hook
-curl -fsSL "$BASE_URL/hooks/pre-commit" -o "$HOOK_DEST"
+echo "Downloading pre-commit hook..."
+curl -fsSL "$HOOK_URL" -o "$HOOK_DEST"
 chmod +x "$HOOK_DEST"
 
-# Create git storage dirs
+# Create directories
 mkdir -p "$DIALOGUE_DIR" "$ASCII_DIR"
 
-echo "Downloading dialogues..."
-curl -fsSL "$BASE_URL/dialogues/" | grep -o 'href="[^"]*\.txt"' | sed 's/href="//;s/"//' | while read -r FILE; do
-    curl -fsSL "$BASE_URL/dialogues/$FILE" -o "$DIALOGUE_DIR/$FILE"
-done
+echo "Downloading dialogues and ASCII art..."
+curl -L "$ZIP_URL" -o "$TEMP_ZIP"
 
-echo "Downloading ASCII art..."
-curl -fsSL "$BASE_URL/ascii/" | grep -o 'href="[^"]*\.txt"' | sed 's/href="//;s/"//' | while read -r FILE; do
-    curl -fsSL "$BASE_URL/ascii/$FILE" -o "$ASCII_DIR/$FILE"
-done
+# Extract only dialogues and ascii directories
+unzip -o "$TEMP_ZIP" "git-committi-master/dialogues/*" -d /tmp/
+unzip -o "$TEMP_ZIP" "git-committi-master/ascii/*" -d /tmp/
+
+# Move extracted files to .git
+cp /tmp/git-committi-master/dialogues/* "$DIALOGUE_DIR/"
+cp /tmp/git-committi-master/ascii/* "$ASCII_DIR/"
+
+# Clean up temp
+rm -rf /tmp/git-committi-master
+rm -f "$TEMP_ZIP"
 
 # Initialize shame file
-SHAME_FILE="$PROJECT_ROOT/.git/commit_shame_file"
 if [ ! -f "$SHAME_FILE" ]; then
     echo "offenses=0" > "$SHAME_FILE"
 fi

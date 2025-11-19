@@ -1,48 +1,52 @@
 #!/bin/bash
-
 set -e
 
-PROJECT_ROOT="$(cd "$(dirname "$0")" && pwd)"
-HOOK_SRC="$PROJECT_ROOT/hooks/pre-commit"
-DIALOGUE_SRC="$PROJECT_ROOT/dialogues"
+BASE_URL="https://raw.githubusercontent.com/brtmax/git-committi/master"
 
-#   Validate Git repo
+PROJECT_ROOT="$(pwd)"
+
+# Validate git repo
 if [ ! -d "$PROJECT_ROOT/.git" ]; then
-    echo "❌ Error: This directory is not a Git repository."
+    echo "Error: This directory is not a Git repository."
     echo "Run: git init"
     exit 1
 fi
 
-#   Install pre-commit hook
 HOOK_DEST="$PROJECT_ROOT/.git/hooks/pre-commit"
-
-# Backup existing pre-commit hook if present
-if [ -f "$HOOK_DEST" ]; then
-    echo "Existing pre-commit hook found. Backing it up to pre-commit.backup"
-    cp "$HOOK_DEST" "$HOOK_DEST.backup"
-fi
+DIALOGUE_DIR="$PROJECT_ROOT/.git/dialogues"
+ASCII_DIR="$PROJECT_ROOT/.git/ascii"
 
 echo "Installing pre-commit hook..."
-cp "$HOOK_SRC" "$HOOK_DEST"
+
+# Backup existing hook
+if [ -f "$HOOK_DEST" ]; then
+    cp "$HOOK_DEST" "$HOOK_DEST.backup"
+    echo "Backed up existing hook → pre-commit.backup"
+fi
+
+# Download hook
+curl -fsSL "$BASE_URL/hooks/pre-commit" -o "$HOOK_DEST"
 chmod +x "$HOOK_DEST"
 
-#   Create internal git storage dirs
-mkdir -p "$PROJECT_ROOT/.git/dialogues"
-mkdir -p "$PROJECT_ROOT/.git/ascii"
+# Create git storage dirs
+mkdir -p "$DIALOGUE_DIR" "$ASCII_DIR"
 
-echo "Copying dialogues..."
-cp "$DIALOGUE_SRC"/*.txt "$PROJECT_ROOT/.git/dialogues/"
+echo "Downloading dialogues..."
+curl -fsSL "$BASE_URL/dialogues/" | grep -o 'href="[^"]*\.txt"' | sed 's/href="//;s/"//' | while read -r FILE; do
+    curl -fsSL "$BASE_URL/dialogues/$FILE" -o "$DIALOGUE_DIR/$FILE"
+done
 
-echo "Copying ASCII art..."
-cp "$ASCII_SRC"/*.txt "$PROJECT_ROOT/.git/ascii/"
+echo "Downloading ASCII art..."
+curl -fsSL "$BASE_URL/ascii/" | grep -o 'href="[^"]*\.txt"' | sed 's/href="//;s/"//' | while read -r FILE; do
+    curl -fsSL "$BASE_URL/ascii/$FILE" -o "$ASCII_DIR/$FILE"
+done
 
-#   Initialize shame file
+# Initialize shame file
 SHAME_FILE="$PROJECT_ROOT/.git/commit_shame_file"
 if [ ! -f "$SHAME_FILE" ]; then
-    echo "Initializing commit_shame_file..."
     echo "offenses=0" > "$SHAME_FILE"
 fi
 
 echo ""
-echo "Installation complete!"
-echo "Your committi insult engine is now active."
+echo "committi insult engine is now active."
+

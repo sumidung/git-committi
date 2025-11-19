@@ -62,6 +62,10 @@ run_committi_sequence() {
     done
 }
 
+# This does not work as intended right now, ssty tries to put the terminal in raw mode
+# but git hooks env is non-interactive, therefore stdin is not a real terminal. 
+# Need a better way to make it more annoying (this is meant to require actually having to release
+# the enter key and pressing it again)
 wait_for_single_enter() {
     # Put terminal in raw mode (disables input buffering)
     stty -echo -icanon time 0 min 0
@@ -104,8 +108,7 @@ if [ "$dialogue_index" -eq 6 ]; then
     dialogue_file="$DIALOGUE_DIR/dialogue6a.txt"
     while IFS= read -r line || [ -n "$line" ]; do
         echo "$line"
-        echo "(Press ENTER to continue...)"
-        wait_for_single_enter
+        read -p "(Press ENTER to continue...)" < /dev/tty || true
     done < "$dialogue_file"
 
     # Pick a random sentence
@@ -118,8 +121,7 @@ if [ "$dialogue_index" -eq 6 ]; then
     dialogue_file="$DIALOGUE_DIR/dialogue6b.txt"
     while IFS= read -r line || [ -n "$line" ]; do
         echo "$line"
-        echo "(Press ENTER to continue...)"
-        wait_for_single_enter
+        read -p "(Press ENTER to continue...)" < /dev/tty || true
     done < "$dialogue_file"
 
 else
@@ -127,8 +129,7 @@ else
     dialogue_file="$DIALOGUE_DIR/dialogue${dialogue_index}.txt"
     while IFS= read -r line || [ -n "$line" ]; do
         echo "$line"
-        echo "(Press ENTER to continue...)"
-        wait_for_single_enter
+        read -p "(Press ENTER to continue...)" < /dev/tty || true
     done < "$dialogue_file"
 fi
 

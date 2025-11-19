@@ -15,8 +15,8 @@ changed=$(git diff --cached --name-only | wc -l)
 offense_threshold=3
 total_dialogues=8
 
-SHAME_FILE = ".git/commit_shame_file"
-DIALOGUE_DIR= ".git/dialogues"
+SHAME_FILE=".git/commit_shame_file"
+DIALOGUE_DIR=".git/dialogues"
 
 # Create the shame file if its missing
 if [ ! -f "$SHAME_FILE" ]; then
@@ -24,65 +24,8 @@ if [ ! -f "$SHAME_FILE" ]; then
 fi
 
 source "$SHAME_FILE"
-offenses = $((offenses + 1))
+offenses=$((offenses + 1))
 echo "offenses=$offenses" > "$SHAME_FILE"
-
-# Determine which dialogue to display:
-# Originally on Gamecube version, first 8 dialogues are displayed in order for successive offenses
-# after that, 6, 7 and 8 are repeated in order.
-if [ "$offenses" -le $total_dialogues ]; then
-    dialogue_index=$offenses
-else
-    # Cycle last three dialogues in order
-    cycle_index=$(((offenses - 6) % 3))
-    dialogue_index=$((6 + cycle_index))
-fi
-
-# Handle special case for dialogue5
-if [ "$dialogue_index" -eq 6 ]; then
-    # Display 5a
-    dialogue_file="$DIALOGUE_DIR/dialogue5a.txt"
-    while IFS= read -r line || [ -n "$line" ]; do
-        echo "$line"
-        echo "(Press ENTER to continue...)"
-        wait_for_single_enter
-    done < "$dialogue_file"
-
-    # Pick a random sentence
-    target_sentence="${sentences[$RANDOM % ${#sentences[@]}]}"
-
-    # run sequence with random sentence
-    run_committi_sequence "$target_sentence"
-
-    # Display 5b
-    dialogue_file="$DIALOGUE_DIR/dialogue5b.txt"
-    while IFS= read -r line || [ -n "$line" ]; do
-        echo "$line"
-        echo "(Press ENTER to continue...)"
-        wait_for_single_enter
-    done < "$dialogue_file"
-
-else
-    # Regular dialogues
-    dialogue_file="$DIALOGUE_DIR/dialogue${dialogue_index}.txt"
-    while IFS= read -r line || [ -n "$line" ]; do
-        echo "$line"
-        echo "(Press ENTER to continue...)"
-        wait_for_single_enter
-    done < "$dialogue_file"
-fi
-
-expected="I AM VERY SORRY"
-user_input=""
-
-# Optionally, make this trigger once every time, regardless of whether the user typed it correctly
-# the first
-while [ "$user_input" != "$expected" ]; do
-    read -p "What are you... ? " user_input < /dev/tty
-    if [ "$user_input" != "$expected" ]; then
-        echo "WRONG! YOU ARE VERY SORRY."
-    fi
-done
 
 # Of course, lore-accurate https://animalcrossing.fandom.com/wiki/Guide:Resetti_dialogues_(Animal_Crossing)
 run_committi_sequence() {
@@ -143,3 +86,61 @@ wait_for_single_enter() {
     # restore terminal
     stty sane
 }
+# Determine which dialogue to display:
+# Originally on Gamecube version, first 8 dialogues are displayed in order for successive offenses
+# after that, 6, 7 and 8 are repeated in order.
+if [ "$offenses" -le "$total_dialogues" ]; then
+    dialogue_index=$offenses
+else
+    # Cycle last three dialogues in order
+    cycle_index=$(((offenses - 6) % 3))
+    dialogue_index=$((6 + cycle_index))
+fi
+
+# Dialogue 6 requires user input inbetween. This could be improved but since
+# the dialogue won't change, it's probably better not to overoptimize
+if [ "$dialogue_index" -eq 6 ]; then
+    # Display 6a
+    dialogue_file="$DIALOGUE_DIR/dialogue6a.txt"
+    while IFS= read -r line || [ -n "$line" ]; do
+        echo "$line"
+        echo "(Press ENTER to continue...)"
+        wait_for_single_enter
+    done < "$dialogue_file"
+
+    # Pick a random sentence
+    target_sentence="${sentences[$RANDOM % ${#sentences[@]}]}"
+
+    # run sequence with random sentence
+    run_committi_sequence "$target_sentence"
+
+    # Display 5b
+    dialogue_file="$DIALOGUE_DIR/dialogue6b.txt"
+    while IFS= read -r line || [ -n "$line" ]; do
+        echo "$line"
+        echo "(Press ENTER to continue...)"
+        wait_for_single_enter
+    done < "$dialogue_file"
+
+else
+    # Regular dialogues
+    dialogue_file="$DIALOGUE_DIR/dialogue${dialogue_index}.txt"
+    while IFS= read -r line || [ -n "$line" ]; do
+        echo "$line"
+        echo "(Press ENTER to continue...)"
+        wait_for_single_enter
+    done < "$dialogue_file"
+fi
+
+expected="I AM VERY SORRY"
+user_input=""
+
+# Optionally, make this trigger once every time, regardless of whether the user typed it correctly
+# the first
+while [ "$user_input" != "$expected" ]; do
+    read -p "What are you... ? " user_input < /dev/tty
+    if [ "$user_input" != "$expected" ]; then
+        echo "WRONG! YOU ARE VERY SORRY."
+    fi
+done
+

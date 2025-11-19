@@ -14,4 +14,4 @@ https://animalcrossing.fandom.com/wiki/Guide:Resetti_dialogues_(Animal_Crossing)
 Noriko Ikegawa, Yoshihisa Morimoto
 
 
-Also, yes I could have used `git reset`, but I'd argue that forgetting to commit is semantically closer to the message Resetti was trying to teach us.
+Also, yes `git reset` could be used as well, but I'd argue that forgetting to commit is semantically closer to the message Resetti was trying to teach us.
